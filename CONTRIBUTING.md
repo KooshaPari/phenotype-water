@@ -49,7 +49,7 @@ If a `commitlint.config.*` exists in the repo, it is enforced; otherwise the con
 ## Pull request expectations
 
 - Keep PRs focused and small; split unrelated changes.
-- **Public API changes must be backward-compatible.** Add new methods/overloads rather than mutating signatures; deprecate before removing. Consumers include `phenotype-voxel`, `phenotype-terrain`, and end-user Phenotype water mods.
+- **Public API changes must be backward-compatible.** Add new methods/overloads rather than mutating signatures; deprecate before removing. The in-repo consumer is `phenotype-terrain` (this package depends on it); downstream consumers are end-user Phenotype water mods.
 - `phenotype-water.csproj` has `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>`: any change that touches the unsafe path must come with a test under `tests/`.
 - Ensure `dotnet build` and `dotnet test` are green before pushing.
 - Describe **what** changed and **why**. Link the AgilePlus spec, issue, or ADR.

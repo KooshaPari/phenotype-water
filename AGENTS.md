@@ -14,12 +14,12 @@ Do not apply parent shelf instructions (e.g. `/Users/kooshapari/CodeProjects/Phe
 - **Phenotype org governance:** `/Users/kooshapari/CodeProjects/Phenotype/repos/CLAUDE.md` (consult when touching cross-repo contracts).
 - **Global agent guidance:** `~/.claude/AGENTS.md` (consult for global defaults).
 - **AgilePlus work tracking:** `cd /repos/AgilePlus && agileplus <command>` — required for non-trivial work per the CONTRIBUTING mandate.
-- **Sibling shared packages:** `phenotype-voxel`, `phenotype-terrain` (sibling Phenotype mod packages).
+- **Sibling shared packages:** `phenotype-terrain` (in-repo sibling — water is layered on top of the terrain mesh interface); downstream consumers are end-user Phenotype water mods.
 
 ## Working Conventions
 
 - **Branch naming:** `<type>/<topic>` in kebab-case, conventional commits. See `CONTRIBUTING.md`.
-- **PR expectations:** Use the repository's pull_request_template (when present). Each PR links an AgilePlus spec, includes a short rationale, and notes any consumer-side impact on `phenotype-voxel` / `phenotype-terrain`.
+- **PR expectations:** Use the repository's pull_request_template (when present). Each PR links an AgilePlus spec, includes a short rationale, and notes any consumer-side impact on `phenotype-terrain` (the in-repo sibling) and downstream Unity water mods.
 - **Quality gates:** `dotnet build phenotype-water.slnx` succeeds; consumers recompile against the changed surface. Unity consumers regenerate `.meta` and resolve via sibling project reference.
 - **Stack:** C# / .NET (Microsoft.NET.Sdk), targeting net48. Edit `.editorconfig` to relax linting on Unity auto-generated `.meta` files.
 - **Traceability:** Substantive work links FR IDs (e.g. `FR-WATER-GERSTNER-001`) or an ADR. XML doc comments on public API surface.
