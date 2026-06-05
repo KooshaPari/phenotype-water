@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Foundation: `SECURITY.md` (private disclosure via GitHub Security Advisories, response targets).
 - Foundation: `CODEOWNERS` (default reviewer: `@KooshaPari`).
 - Foundation: `.github/workflows/dotnet-test.yml` (Ubuntu, .NET 8, runs the existing xunit test project `tests/phenotype-water.tests.csproj`).
-- Foundation: `.github/dependabot.yml` (weekly updates for `github-actions` and `nuget`, 5-PR limit).
+- Foundation: `.github/dependabot.yml` (weekly updates for `github-actions`, 5-PR limit; `nuget` intentionally not enabled — see the YAML comment for the rationale and re-enable condition).
 - Foundation: `.github/ISSUE_TEMPLATE/bug_report.md` and `feature_request.md`.
 - Foundation: `.github/pull_request_template.md` (summary, type-of-change checklist, affected surface, testing checklist, spec/traceability, risks, related).
 - Foundation: `CONTRIBUTING.md` (AgilePlus spec mandate, dotnet build + dotnet test commands, kebab-case branch conventions, Conventional Commits, PR expectations with explicit backward-compatible public-API rule and the "changes to the unsafe path must come with a test" rule).
