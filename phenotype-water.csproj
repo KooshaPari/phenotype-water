@@ -10,17 +10,22 @@
 
   <ItemGroup>
     <Compile Remove="tests\**\*.cs" />
+    <Compile Remove="src\UnityEngineStubs.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\phenotype-terrain\phenotype-terrain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="Exists('$(WorldBoxManaged)/UnityEngine.CoreModule.dll')">
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(WorldBoxManaged)/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('$(WorldBoxManaged)/UnityEngine.CoreModule.dll')">
+    <Compile Include="src\UnityEngineStubs.cs" />
   </ItemGroup>
 
 </Project>
