@@ -7,6 +7,7 @@ namespace UnityEngine
         public float x, y;
         public static readonly Vector2 right = new Vector2(1f, 0f);
         public static readonly Vector2 one = new Vector2(1f, 1f);
+        public static readonly Vector2 zero = new Vector2(0f, 0f);
         public float sqrMagnitude => x * x + y * y;
         public float magnitude => (float)Math.Sqrt(sqrMagnitude);
         public Vector2 normalized => magnitude > 1e-10f ? this / magnitude : right;
