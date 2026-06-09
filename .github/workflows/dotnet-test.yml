@@ -34,23 +34,7 @@ jobs:
       # existing src/UnityEngineStubs.cs as the source and target net48 so the
       # stub runs on the same framework as the consuming project.
       - name: Stub UnityEngine.CoreModule
-        run: |
-          set -euo pipefail
-          STUB_DIR=$(mktemp -d)
-          cat > "$STUB_DIR/Stub.csproj" <<EOF
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <TargetFramework>net48</TargetFramework>
-              <AssemblyName>UnityEngine.CoreModule</AssemblyName>
-              <RootNamespace>UnityEngine</RootNamespace>
-            </PropertyGroup>
-            <ItemGroup>
-              <Compile Include="$(pwd)/src/UnityEngineStubs.cs" />
-            </ItemGroup>
-          </Project>
-          EOF
-          dotnet build "$STUB_DIR/Stub.csproj" -c Release --nologo
-          echo "WorldBoxManaged=$STUB_DIR/bin/Release/net48" >> $GITHUB_ENV
+        run: .github/scripts/stub-unity-engine.sh --source src/UnityEngineStubs.cs --framework net48
 
       - name: Restore
         run: dotnet restore phenotype-water.slnx
