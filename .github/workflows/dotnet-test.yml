@@ -29,44 +29,28 @@ jobs:
           dotnet-version: 8.0.x
 
       # The library references UnityEngine.CoreModule.dll under $(WorldBoxManaged);
-      # the variable is not set in CI, so we compile a minimal stub assembly that
-      # exposes just enough of the UnityEngine namespace for the project to compile.
-      # The stub is a real PE-format .NET 8.0 assembly.
+      # the variable is not set in CI, so we compile a stub assembly that
+      # exposes the full UnityEngine namespace the project needs. We use the
+      # existing src/UnityEngineStubs.cs as the source and target net48 so the
+      # stub runs on the same framework as the consuming project.
       - name: Stub UnityEngine.CoreModule
         run: |
           set -euo pipefail
-          mkdir -p _stub
-          cat > _stub/Stub.csproj <<'EOF'
+          STUB_DIR=$(mktemp -d)
+          cat > "$STUB_DIR/Stub.csproj" <<'EOF'
           <Project Sdk="Microsoft.NET.Sdk">
             <PropertyGroup>
-              <TargetFramework>net8.0</TargetFramework>
+              <TargetFramework>net48</TargetFramework>
               <AssemblyName>UnityEngine.CoreModule</AssemblyName>
               <RootNamespace>UnityEngine</RootNamespace>
             </PropertyGroup>
+            <ItemGroup>
+              <Compile Include="$(pwd)/src/UnityEngineStubs.cs" />
+            </ItemGroup>
           </Project>
           EOF
-          cat > _stub/Vector3.cs <<'EOF'
-          namespace UnityEngine
-          {
-              public struct Vector3
-              {
-                  public float x, y, z;
-                  public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; }
-              }
-          }
-          EOF
-          cat > _stub/Vector2.cs <<'EOF'
-          namespace UnityEngine
-          {
-              public struct Vector2
-              {
-                  public float x, y;
-                  public Vector2(float x, float y) { this.x = x; this.y = y; }
-              }
-          }
-          EOF
-          dotnet build _stub/Stub.csproj -c Release --nologo
-          echo "WorldBoxManaged=$(pwd)/_stub/bin/Release/net8.0" >> $GITHUB_ENV
+          dotnet build "$STUB_DIR/Stub.csproj" -c Release --nologo
+          echo "WorldBoxManaged=$STUB_DIR/bin/Release/net48" >> $GITHUB_ENV
 
       - name: Restore
         run: dotnet restore phenotype-water.slnx
@@ -78,4 +62,4 @@ jobs:
         run: dotnet test tests/phenotype-water.tests.csproj -c Release --no-build --verbosity normal
 
       - name: Format
-        run: dotnet format --verify-no-changes --verbosity diagnostic
+        run: dotnet format phenotype-water.slnx --verify-no-changes --verbosity diagnostic
