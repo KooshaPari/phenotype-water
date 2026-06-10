@@ -17,7 +17,13 @@ concurrency:
 jobs:
   test:
     name: dotnet test (net48)
-    runs-on: ubuntu-latest
+    # Pinned to ubuntu-24.04 (was: ubuntu-latest). `ubuntu-latest` is a moving
+    # target that resolves to a different Ubuntu LTS every ~2 years; a green
+    # build today is not a guarantee of a green build next year if a future
+    # LTS brings a behavior change (apt mirror policy, dotnet SDK version,
+    # TFM compatibility check). phenotype-terrain already pins to 24.04;
+    # this matches the org convention and gives reproducible CI.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout
