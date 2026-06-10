@@ -48,3 +48,4 @@ package is "All rights reserved" by default under copyright law. The
 package owner should commit an MIT `LICENSE` file at the repo root
 before the first public release, and consumers should treat the
 absence of the file as a red flag.
+<!-- ci-refresh: 2026-06-10T07:21:47Z -->
