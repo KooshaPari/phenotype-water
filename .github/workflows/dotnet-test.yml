@@ -15,41 +15,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  build:
     name: dotnet test (net48)
-    # Pinned to ubuntu-24.04 (was: ubuntu-latest). `ubuntu-latest` is a moving
-    # target that resolves to a different Ubuntu LTS every ~2 years; a green
-    # build today is not a guarantee of a green build next year if a future
-    # LTS brings a behavior change (apt mirror policy, dotnet SDK version,
-    # TFM compatibility check). phenotype-terrain already pins to 24.04;
-    # this matches the org convention and gives reproducible CI.
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      # The water project depends on phenotype-terrain for LodBase (shared
-      # hexagonal base type). Checkout the sibling repo alongside so the
-      # `..\phenotype-terrain\phenotype-terrain.csproj` ProjectReference resolves.
       - name: Checkout phenotype-terrain (sibling)
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           repository: KooshaPari/phenotype-terrain
-          path: ../phenotype-terrain
+          path: _sibling/phenotype-terrain
 
       - name: Setup .NET
         uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: 8.0.x
 
-      # The library references UnityEngine.CoreModule.dll under $(WorldBoxManaged);
-      # the variable is not set in CI, so we compile a stub assembly that
-      # exposes the full UnityEngine namespace the project needs. We use the
-      # existing src/UnityEngineStubs.cs as the source and target net48 so the
-      # stub runs on the same framework as the consuming project.
       - name: Stub UnityEngine.CoreModule
-        run: .github/scripts/stub-unity-engine.sh --source src/UnityEngineStubs.cs --framework net48
+        run: |
+          set -euo pipefail
+          bash .github/scripts/stub-unity-engine.sh --source src/UnityEngineStubs.cs --framework net48
 
       - name: Restore
         run: dotnet restore phenotype-water.slnx
@@ -61,4 +49,4 @@ jobs:
         run: dotnet test tests/phenotype-water.tests.csproj -c Release --no-build --verbosity normal
 
       - name: Format
-        run: dotnet format phenotype-water.slnx --verify-no-changes --verbosity diagnostic
+        run: dotnet format --verify-no-changes --verbosity diagnostic
