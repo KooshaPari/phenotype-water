@@ -59,4 +59,4 @@ jobs:
         run: dotnet test tests/phenotype-water.tests.csproj -c Release --no-build --verbosity normal
 
       - name: Format
-        run: dotnet format --verify-no-changes --verbosity diagnostic
+        run: dotnet format phenotype-water.slnx --verify-no-changes --verbosity diagnostic
